@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import {connect} from 'react-redux'
+import Counter from './Counter'
+import {add,sub,addNumber,asyncAdd} from './reducer/actions/actions'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+
+  render(){
+    // console.log("APP", this.props)
+    
+    return (
+      <div className="App">
+        <div className="Container">
+            <h1>counter <strong>{this.props.counter}</strong></h1>
+          <hr/>
+            <button onClick={this.props.onAdd}>add</button>
+            <button onClick={this.props.onSub}>subtract</button>
+          <hr/>
+            <button onClick={()=>this.props.onAddNumber(15)}>add +15</button>
+            <button onClick={this.props.onAddNumber.bind(this, -15)}>subtract -15</button>
+          <hr/>
+          <button onClick={this.props.onAsyncAdd.bind(this, 100)}>asynchronous code 100</button>
+          <Counter />
+        </div>
+        
+      </div>
+    );
+  }
+
 }
-
-export default App;
+function mapStateToProps(state){
+  return{
+    counter:state.counter1.counter
+  }
+}
+function mapDispatchProps(dispatch){
+  return{
+    onAdd: ()=>{dispatch(add())},
+    onSub: ()=>{dispatch(sub())},
+    onAddNumber: number =>{dispatch(addNumber(number))},
+    onAsyncAdd:number=>{dispatch(asyncAdd(number))}
+  }
+} 
+export default connect (mapStateToProps, mapDispatchProps) (App);
